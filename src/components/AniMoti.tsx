@@ -40,46 +40,15 @@ const cars: Car[] = [
       "https://www.hyundai.com/content/dam/hyundai/in/en/data/vehicle-thumbnail/1600x590_nios.png",
   },
   {
-    color: "#FDFAF6",
+    color: "#a86868",
     name: "Grand i20 ",
     price: "685,690",
     image:
       "https://www.hyundai.com/content/dam/hyundai/in/en/data/vehicle-thumbnail/1600x590_i20.png",
   },
 ];
-
-// function Shape() {
-//   const styles = StyleSheet.create({
-//     shape: {
-//       justifyContent: "center",
-//       height: 250,
-//       width: 250,
-//       borderRadius: 25,
-//       marginRight: 10,
-//       backgroundColor: "rgba(255,255,255,0.2)",
-//     },
-//   });
-//   return (
-//     <MotiView
-//       from={{
-//         opacity: 0,
-//         scale: 0.5,
-//       }}
-//       animate={{
-//         opacity: 1,
-//         scale: 1,
-//       }}
-//       transition={{
-//         type: "timing",
-//       }}
-//       style={styles.shape}
-//     />
-//   );
-// }
-
 export default function AniMoti() {
   // const [visible, toggle] = React.useReducer(s => !s, true);
-  const [pressed, setPressed] = useState(false);
   const { height, width } = useWindowDimensions();
   return (
     <View
@@ -87,7 +56,7 @@ export default function AniMoti() {
         justifyContent: "center",
         alignItems: "center",
         flex: 1,
-        backgroundColor: "#255",
+        backgroundColor: "#2e2e2e",
       }}
     >
       <FlatList
@@ -115,20 +84,18 @@ export default function AniMoti() {
 function Cards({ item }: { item: Car }) {
   const { height, width } = useWindowDimensions();
   const [open, setOpen] = useState(false);
+  // state for CarDetail
   const state = useAnimationState({
     from: {
       opacity: 1,
-      translateY: -80,
-      translateX: 0,
-      scale: 1.6,
+      scale: 1.5,
+      translateY: -70,
       rotate: "0deg",
     },
     to: {
       opacity: 1,
-      translateX: 0,
-      backgroundColor: item.color,
       scale: 1.2,
-      translateY: 0,
+      translateY: 20,
       rotate: "0deg",
     },
   });
@@ -137,11 +104,11 @@ function Cards({ item }: { item: Car }) {
       scale: 1.2,
       translateY: 50,
       backgroundColor: item.color,
-      height: height * 0.65,
-      width: width * 0.8,
+      height: height * 0.6,
+      width: width * 0.7,
     },
     to: {
-      scale: 1,
+      scale: 1.1,
       translateY: 70,
       backgroundColor: "#fff",
       height: width * 0.5,
@@ -166,12 +133,12 @@ function Cards({ item }: { item: Car }) {
         state={state}
         transition={{
           type: "timing",
-          duration: 500,
+          duration: 400,
         }}
         style={{
           height: width * 0.5,
           overflow: "hidden",
-          zIndex: 50,
+          zIndex: 100,
           position: "absolute",
           width: width * 0.5,
           borderRadius: 16,
@@ -204,10 +171,11 @@ function Cards({ item }: { item: Car }) {
               },
             ]}
           >
+            {/* text on small card */}
             <MotiText
               style={{
                 fontWeight: "700",
-                color: "#77777",
+                color: "#7777",
                 textAlign: "center",
                 fontSize: 18,
               }}
@@ -223,12 +191,13 @@ function Cards({ item }: { item: Car }) {
   );
 }
 function CarDetail({ item }: { item: Car }) {
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   return (
+    // this animation is for the info card
     <MotiView
       transition={{
         type: "timing",
-        duration: 300,
+        duration: 400,
       }}
       from={{
         translateY: -300,
@@ -265,13 +234,12 @@ function CarDetail({ item }: { item: Car }) {
           alignItems: "center",
         }}
       >
-        {/* <FontAwesome color="#343A40" name="rupee" size={20} /> */}
         <MotiText
           style={{
             fontSize: 16,
             fontWeight: "300",
             color: "#343A40",
-            marginHorizontal: 5,
+            marginHorizontal: 2,
           }}
         >
           {item.price}
@@ -279,16 +247,18 @@ function CarDetail({ item }: { item: Car }) {
       </View>
       <View
         style={{
-          height: 60,
+          height: 50,
           paddingHorizontal: 30,
           backgroundColor: "black",
           justifyContent: "space-between",
           alignItems: "center",
           flexDirection: "row",
+          borderRadius: 200,
         }}
       >
-        <Text style={{ color: "#fff" }}>Book A Ride</Text>
-        {/* <FontAwesome color="white" name="long-arrow-right" /> */}
+        <Pressable style={{}}>
+          <Text style={{ color: "#fff" }}>Book A Ride</Text>
+        </Pressable>
       </View>
     </MotiView>
   );

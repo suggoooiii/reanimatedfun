@@ -9,9 +9,9 @@ import AnimatedStroke from "./AnimatedStroke";
 import NeuAnimated from "./NeuAnimated";
 
 export default function Stroking() {
-  const MARGIN = 40;
+  const MARGIN = 30;
   const vWidth = 600;
-  const vHeight = 246;
+  const vHeight = 246 + MARGIN;
   const width = Dimensions.get("window").width - MARGIN;
   const height = (width * vHeight) / vWidth;
   const path = [
@@ -26,11 +26,11 @@ export default function Stroking() {
       alignItems: "center",
     },
   });
-
   const progress = useSharedValue(0);
+
   useEffect(() => {
     progress.value = withTiming(1, {
-      duration: 4000,
+      duration: 5000,
       easing: Easing.linear,
     });
     // stroke.value = 3;

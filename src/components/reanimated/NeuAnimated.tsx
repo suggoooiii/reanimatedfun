@@ -1,7 +1,7 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react/react-in-jsx-scope */
+import { useRef, useState } from "react";
 import { Dimensions, View } from "react-native";
 import Animated, {
+  ColorSpace,
   Easing,
   Extrapolate,
   interpolate,
@@ -12,7 +12,6 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Circle, Path } from "react-native-svg";
-import { useState, useRef } from "react";
 
 interface NeuAnimated {
   progress: Animated.SharedValue<number>;
@@ -21,7 +20,7 @@ interface NeuAnimated {
 const Margin = 5;
 const vWidth = 575 - Margin;
 const vHeight = 575 - Margin;
-const { width } = Dimensions.get("window");
+const width = Dimensions.get("window").width;
 const height = (width * vHeight) / vWidth;
 
 const Gutpath = [
@@ -42,12 +41,17 @@ export default function NeuAnimated({ progress: progressRaw }: NeuAnimated) {
     ),
   );
   const fillColor = useDerivedValue(() =>
-    interpolateColor(progressRaw.value, [0, 1], ["transparent", expColor]),
+    interpolateColor(
+      progressRaw.value,
+      [0, 1],
+      ["transparent", expColor],
+      "RGB",
+    ),
   );
 
   // for rotating the circle
   const part2 = useDerivedValue(() =>
-    Easing.inOut(Easing.ease)(
+    Easing.in(Easing.ease)(
       interpolate(progressRaw.value, [0, 1], [1, 0], Extrapolate.CLAMP),
     ),
   );
@@ -59,12 +63,11 @@ export default function NeuAnimated({ progress: progressRaw }: NeuAnimated) {
     "worklet";
 
     return {
-      strokeDashoffset: length - length * part2.value,
-      fill: withTiming(fillColor.value, {
-        easing: Easing.linear,
-      }),
+      strokeDashoffset: length - length * part1.value,
+      fill: fillColor.value,
     };
   };
+
   const rotateAnimation = (target: number) => () => {
     "worklet";
 
@@ -76,28 +79,29 @@ export default function NeuAnimated({ progress: progressRaw }: NeuAnimated) {
   const animatedrops1 = useAnimatedProps(strokeAnimation);
   // const animatedrops2 = useAnimatedProps(strokeAnimation);
   // const animatedrops3 = useAnimatedProps(strokeAnimation);
-  const rotate = useAnimatedStyle(rotateAnimation(Math.PI));
+  const rotate = useAnimatedStyle(rotateAnimation(Math.PI)); // Math.PI
   return (
     <View>
-      <Animated.View style={rotate}>
+      <Animated.View style={[rotate]}>
         <Svg
           width={width}
           height={height}
           viewBox={[0, 0, vWidth, vHeight].join(" ")}
         >
-          {Gutpath.map((d, key) => (
-            <AnimatedPath
-              animatedProps={animatedrops1}
-              d={d}
-              ref={ref}
-              onLayout={() => setLength(ref.current!.getTotalLength())}
-              key={key}
-              strokeDasharray={length}
-              stroke="black"
-              strokeWidth={5}
-              // translateX={-20}
-            />
-          ))}
+          <>
+            {Gutpath.map((d, key) => (
+              <AnimatedPath
+                animatedProps={animatedrops1}
+                onLayout={() => setLength(ref.current!.getTotalLength())}
+                ref={ref}
+                d={d}
+                key={key}
+                strokeDasharray={length}
+                stroke="black"
+                strokeWidth={5}
+              />
+            ))}
+          </>
           <AnimatedCircle
             animatedProps={circle}
             cx="287.5"
@@ -105,14 +109,6 @@ export default function NeuAnimated({ progress: progressRaw }: NeuAnimated) {
             stroke="rgba(144,54,70,1)"
             strokeWidth="13"
           />
-          {/* <Ellipse
-          cx="250"
-          cy="250"
-          rx="100"
-          ry="300"
-          rotation={5}
-          fill="brown"
-        /> */}
         </Svg>
       </Animated.View>
     </View>
